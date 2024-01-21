@@ -32,11 +32,18 @@ const server =http.createServer((req,res)=>{
 
     const pathName = req.url;
 
-    if ((pathName ==='/') || (pathName === '/overview')){
+    if (pathName ==='/' || pathName === '/overview'){
         res.end('this is the overview');
     }
     else if (pathName === '/product'){
         res.end('this is the product');
+    }
+    else {
+        res.writeHead(404, {
+            'Content-type' : 'text/html',
+            'my-own-header' : 'hello-world'
+        });
+        res.end('<h1>This Page Not Found!</h1>');
     }
     
 });
