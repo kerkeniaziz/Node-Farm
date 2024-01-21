@@ -12,3 +12,4 @@ console.log('file written!');
 fs.readFile('./starter/txt/start.txt','utf-8' , (err,data)=> {
     console.log(data);
 });
+console.log('will read file!');
