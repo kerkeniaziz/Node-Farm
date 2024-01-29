@@ -36,7 +36,7 @@ const tempProduct = fs.readFileSync(`${__dirname}/starter/templates/template-pro
 const data =fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8' );
 const dataObj = JSON.parse(data);
     
-const replaceTemplate = (temp, product) =>{
+/*const replaceTemplate = (temp, product) =>{
     let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
     output = temp.replace(/{%IMAGE%}/g, product.image);
     output = temp.replace(/{%PRICE%}/g, product.price);
@@ -48,7 +48,39 @@ const replaceTemplate = (temp, product) =>{
 
     if (!product.organic)
     output = temp.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
-}
+
+    return output;
+}*/
+
+const replaceTemplate = (temp, product) => {
+    return temp.replace(
+        /{%PRODUCTNAME%}|{%IMAGE%}|{%PRICE%}|{%FROM%}|{%NUTNAME%}|{%QUANTITY%}|{%DESCRIPTION%}|{%ID%}|{%NOT_ORGANIC%}/g,
+        (match) => {
+            switch (match) {
+                case '{%PRODUCTNAME%}':
+                    return product.productName;
+                case '{%IMAGE%}':
+                    return product.image;
+                case '{%PRICE%}':
+                    return product.price;
+                case '{%FROM%}':
+                    return product.from;
+                case '{%NUTNAME%}':
+                    return product.nutrients;
+                case '{%QUANTITY%}':
+                    return product.quantity;
+                case '{%DESCRIPTION%}':
+                    return product.description;
+                case '{%ID%}':
+                    return product.id;
+                case '{%NOT_ORGANIC%}':
+                    return product.organic ? '' : 'not-organic';
+                default:
+                    return match;
+            }
+        }
+    );
+};
 
 const server =http.createServer((req,res)=>{
 
@@ -57,11 +89,12 @@ const server =http.createServer((req,res)=>{
     if (pathName ==='/' || pathName === '/overview'){
         res.writeHead(200, {'Content-type' : 'text/html'});
 
-        const cardHtml =dataObj.map(el => replaceTemplate(tempcard, el))
+        const cardsHtml = dataObj.map(el => replaceTemplate(tempCard, el)).join('');
+        
+        const output = tempOverview.replace('{%PRODUCT_CARDS%}',cardsHtml);
 
-
-
-        res.end(tempOverview);
+        res.end(output);
+        
     }
     else if (pathName === '/product'){
         res.end('this is the product');
