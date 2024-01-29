@@ -30,10 +30,12 @@ console.log('will read file!');
 
 //server
 
+const tempOverview = fs.readFileSync(`${__dirname}/starter/templates/template-overview.html`,'utf-8');
+const tempCard = fs.readFileSync(`${__dirname}/starter/templates/template-card.html`,'utf-8');
+const tempProduct = fs.readFileSync(`${__dirname}/starter/templates/template-product.html`,'utf-8');
 const data =fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8' );
 const dataObj = JSON.parse(data);
     
-
 
 
 const server =http.createServer((req,res)=>{
@@ -41,6 +43,7 @@ const server =http.createServer((req,res)=>{
     const pathName = req.url;
 
     if (pathName ==='/' || pathName === '/overview'){
+
         res.end('this is the overview');
     }
     else if (pathName === '/product'){
