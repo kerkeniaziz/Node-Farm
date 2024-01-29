@@ -36,15 +36,32 @@ const tempProduct = fs.readFileSync(`${__dirname}/starter/templates/template-pro
 const data =fs.readFileSync(`${__dirname}/starter/dev-data/data.json`, 'utf-8' );
 const dataObj = JSON.parse(data);
     
+const replaceTemplate = (temp, product) =>{
+    let output = temp.replace(/{%PRODUCTNAME%}/g, product.productName);
+    output = temp.replace(/{%IMAGE%}/g, product.image);
+    output = temp.replace(/{%PRICE%}/g, product.price);
+    output = temp.replace(/{%FROM%}/g, product.from);
+    output = temp.replace(/{%NUTNAME%}/g, product.nutrients);
+    output = temp.replace(/{%QUANTITY%}/g, product.quantity);
+    output = temp.replace(/{%DESCRIPTION%}/g, product.description);
+    output = temp.replace(/{%ID%}/g, product.id);
 
+    if (!product.organic)
+    output = temp.replace(/{%NOT_ORGANIC%}/g, 'not-organic');
+}
 
 const server =http.createServer((req,res)=>{
 
     const pathName = req.url;
 
     if (pathName ==='/' || pathName === '/overview'){
+        res.writeHead(200, {'Content-type' : 'text/html'});
 
-        res.end('this is the overview');
+        const cardHtml =dataObj.map(el => replaceTemplate(tempcard, el))
+
+
+
+        res.end(tempOverview);
     }
     else if (pathName === '/product'){
         res.end('this is the product');
