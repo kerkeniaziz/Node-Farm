@@ -74,7 +74,8 @@ const replaceTemplate = (temp, product) => {
                 case '{%ID%}':
                     return product.id;
                 case '{%NOT_ORGANIC%}':
-                    return product.organic ? '' : 'not-organic';
+                    if (!product.organic)
+                    return 'not-organic';
                 default:
                     return match;
             }
